@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Citas Automático — No pierdas otro cliente</title>
+<title>Yield — No pierdas otro cliente</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -158,6 +158,25 @@
   .btn-telegram{background:#2AABEE;color:#0b2b3d;}
   .btn-telegram:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(42,171,238,0.3);}
 
+  /* ===== FAQ ===== */
+  .faq{max-width:760px;margin:80px auto;padding:0 32px;}
+  .faq-item{
+    border-top:1px solid rgba(20,33,61,0.12);padding:24px 0;
+    cursor:pointer;
+  }
+  .faq-item:last-child{border-bottom:1px solid rgba(20,33,61,0.12);}
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;gap:20px;
+    font-family:'Fraunces',serif;font-size:1.1rem;color:var(--ink);font-weight:600;
+  }
+  .faq-q .icon{color:var(--coral);font-size:1.3rem;transition:transform .25s ease;flex-shrink:0;}
+  .faq-item.open .faq-q .icon{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height .3s ease;
+    color:#5a5850;font-size:0.95rem;line-height:1.6;
+  }
+  .faq-item.open .faq-a{max-height:200px;margin-top:12px;}
+
   footer{text-align:center;padding:40px 24px;color:#8a8778;font-size:0.85rem;}
 
   @media (max-width:800px){
@@ -173,7 +192,7 @@
 <body>
 
 <nav>
-  <div class="logo">Sistema<span style="color:var(--coral)">•</span>Citas</div>
+  <div class="logo">Yield<span style="color:var(--coral)">.</span></div>
   <a href="#hablemos" class="nav-cta">Hablar ahora</a>
 </nav>
 
@@ -248,7 +267,28 @@
       <h3>Pruébalo tú mismo antes de decidir</h3>
       <p>Te dejo una web de ejemplo con el bot funcionando de verdad. Escríbele como lo haría un cliente tuyo y mira cómo responde.</p>
     </div>
-    <a href="landing-demo.html" class="btn-primary">Abrir demo del bot →</a>
+    <a href="/demo" class="btn-primary">Abrir demo del bot →</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <h2 class="section-title display" style="text-align:center">Antes de escribir, esto seguro te lo preguntas</h2>
+  <div class="faq-item">
+    <div class="faq-q"><span>¿Necesito saber de tecnología?</span><span class="icon">+</span></div>
+    <div class="faq-a">No. Tú solo usas tu WhatsApp como siempre. Todo lo demás — el bot, la web, las respuestas — lo monto y lo mantengo yo.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span>¿Es mi mismo número de WhatsApp?</span><span class="icon">+</span></div>
+    <div class="faq-a">Sí, se conecta al número que ya usa tu negocio. Tus clientes no notan ningún cambio, solo que ahora responden al instante.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span>¿Puedo seguir respondiendo yo si quiero?</span><span class="icon">+</span></div>
+    <div class="faq-a">Claro. El bot resuelve lo repetitivo y agenda las citas; tú puedes entrar en cualquier momento a cualquier conversación.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span>¿Y si no me convence una vez montado?</span><span class="icon">+</span></div>
+    <div class="faq-a">Por eso primero lo pruebas en la demo interactiva, con tu propio caso, antes de mover un dedo en tu negocio real.</div>
   </div>
 </section>
 
@@ -268,7 +308,18 @@
   </div>
 </section>
 
-<footer>Sistema de citas automático — hablemos y lo vemos juntos.</footer>
+<footer>Yield — hablemos y lo vemos juntos.</footer>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+</script>
 
 </body>
 </html>
+
