@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Citas Automático — No pierdas otro cliente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     CONFIG RÁPIDA — cambia esto por cada cliente
+     ============================================ */
+  :root{
+    --ink:#14213D;
+    --ivory:#FAF6EF;
+    --coral:#FF6B4A;
+    --sage:#8FA998;
+    --charcoal:#2B2B28;
+  }
+
+  /* ⚠️ EDITA AQUÍ: enlace a la web de prueba cuando esté lista */
+  /* de momento apunta al archivo de demo del bot */
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ivory);color:var(--charcoal);font-family:'Inter',sans-serif;line-height:1.55;overflow-x:hidden;}
+  .display{font-family:'Fraunces',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  nav{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 48px;position:sticky;top:0;
+    background:rgba(250,246,239,0.9);backdrop-filter:blur(8px);
+    z-index:100;border-bottom:1px solid rgba(20,33,61,0.08);
+  }
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;color:var(--ink);}
+  .nav-cta{
+    background:var(--ink);color:var(--ivory);padding:10px 20px;border-radius:100px;
+    text-decoration:none;font-size:0.88rem;font-weight:600;transition:.2s;
+  }
+  .nav-cta:hover{background:var(--coral);transform:translateY(-1px);}
+
+  .hero{
+    max-width:900px;margin:0 auto;padding:100px 32px 60px;text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--sage);font-weight:600;margin-bottom:20px;
+  }
+  .eyebrow::before{content:"●";animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+  h1{
+    font-size:clamp(2.2rem,5vw,3.4rem);font-weight:600;line-height:1.08;
+    color:var(--ink);margin-bottom:22px;letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic;color:var(--coral);}
+  .hero-sub{font-size:1.15rem;color:#5a5850;max-width:560px;margin:0 auto 36px;}
+
+  .hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--coral);color:white;padding:16px 30px;border-radius:100px;
+    text-decoration:none;font-weight:600;font-size:1rem;display:inline-flex;
+    align-items:center;gap:8px;box-shadow:0 8px 24px rgba(255,107,74,0.25);
+    transition:.2s;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(255,107,74,0.35);}
+  .btn-secondary{
+    background:white;color:var(--ink);padding:16px 26px;border-radius:100px;
+    border:1.5px solid rgba(20,33,61,0.15);text-decoration:none;font-weight:600;font-size:1rem;
+  }
+
+  /* ===== CALCULADORA DE PÉRDIDA (psicología de ROI, sin precios) ===== */
+  .leak{
+    max-width:1000px;margin:60px auto;padding:0 32px;
+  }
+  .leak-card{
+    background:var(--ink);color:var(--ivory);border-radius:28px;
+    padding:56px 44px;position:relative;overflow:hidden;
+  }
+  .leak-card::before{
+    content:"";position:absolute;top:-40%;right:-10%;width:400px;height:400px;
+    background:radial-gradient(circle, rgba(255,107,74,0.25), transparent 70%);
+  }
+  .leak-title{font-size:1.7rem;font-weight:600;margin-bottom:10px;position:relative;}
+  .leak-sub{color:rgba(250,246,239,0.7);max-width:520px;margin-bottom:40px;position:relative;font-size:0.98rem;}
+
+  .leak-row{
+    display:grid;grid-template-columns:2fr 1fr;gap:20px;
+    padding:18px 0;border-top:1px solid rgba(250,246,239,0.12);
+    align-items:center;position:relative;
+  }
+  .leak-row:last-of-type{border-bottom:1px solid rgba(250,246,239,0.12);}
+  .leak-label{font-size:0.98rem;color:rgba(250,246,239,0.9);}
+  .leak-value{
+    font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;
+    color:var(--coral);text-align:right;
+  }
+
+  .leak-result{
+    margin-top:32px;padding:24px;background:rgba(255,107,74,0.12);
+    border-radius:18px;border:1px solid rgba(255,107,74,0.3);position:relative;
+  }
+  .leak-result .amount{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:700;color:var(--coral);}
+  .leak-result .caption{color:rgba(250,246,239,0.75);font-size:0.9rem;margin-top:4px;}
+
+  /* ===== RECUPERACIÓN ===== */
+  .recover{max-width:1000px;margin:80px auto;padding:0 32px;}
+  .section-title{font-size:clamp(1.7rem,3vw,2.3rem);color:var(--ink);margin-bottom:14px;font-weight:600;}
+  .section-lead{color:#5a5850;max-width:560px;margin-bottom:44px;font-size:1.02rem;}
+
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-item{
+    display:grid;grid-template-columns:90px 1fr;gap:24px;
+    padding:22px 0;border-left:2px solid rgba(20,33,61,0.12);
+    padding-left:28px;margin-left:6px;position:relative;
+  }
+  .tl-item::before{
+    content:"";position:absolute;left:-7px;top:28px;width:12px;height:12px;
+    border-radius:50%;background:var(--coral);
+  }
+  .tl-day{font-family:'IBM Plex Mono',monospace;color:var(--coral);font-weight:600;font-size:0.9rem;}
+  .tl-item h4{font-family:'Fraunces',serif;color:var(--ink);font-size:1.15rem;margin-bottom:6px;font-weight:600;}
+  .tl-item p{color:#6b6858;font-size:0.92rem;}
+
+  /* ===== WEB DE PRUEBA ===== */
+  .demo-section{max-width:1000px;margin:80px auto;padding:0 32px;}
+  .demo-card{
+    background:white;border-radius:28px;padding:52px 44px;
+    border:1.5px solid rgba(20,33,61,0.08);
+    box-shadow:0 20px 50px rgba(20,33,61,0.06);
+    display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;
+  }
+  .demo-card h3{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--ink);margin-bottom:10px;font-weight:600;}
+  .demo-card p{color:#5a5850;max-width:440px;}
+  .demo-badge{
+    display:inline-flex;align-items:center;gap:6px;background:rgba(143,169,152,0.15);
+    color:var(--sage);padding:6px 14px;border-radius:100px;font-size:0.78rem;
+    font-weight:600;margin-bottom:14px;
+  }
+  .demo-badge::before{content:"●";}
+
+  /* ===== HABLEMOS ===== */
+  .talk{max-width:760px;margin:90px auto 100px;padding:0 32px;text-align:center;}
+  .talk-card{
+    background:var(--ink);border-radius:28px;padding:60px 40px;color:var(--ivory);
+  }
+  .talk-card h2{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:14px;font-weight:600;}
+  .talk-card p{color:rgba(250,246,239,0.75);max-width:460px;margin:0 auto 36px;}
+  .talk-ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn-whatsapp, .btn-telegram{
+    padding:16px 28px;border-radius:100px;text-decoration:none;font-weight:600;
+    font-size:1rem;display:inline-flex;align-items:center;gap:10px;transition:.2s;
+  }
+  .btn-whatsapp{background:#25D366;color:#0b3d1f;}
+  .btn-whatsapp:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(37,211,102,0.3);}
+  .btn-telegram{background:#2AABEE;color:#0b2b3d;}
+  .btn-telegram:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(42,171,238,0.3);}
+
+  footer{text-align:center;padding:40px 24px;color:#8a8778;font-size:0.85rem;}
+
+  @media (max-width:800px){
+    .hero{padding:70px 24px 40px;}
+    .leak-card, .demo-card, .talk-card{padding:34px 26px;}
+    .demo-card{grid-template-columns:1fr;text-align:center;}
+    .leak-row{grid-template-columns:1fr;gap:4px;text-align:left;}
+    .leak-value{text-align:left;}
+    nav{padding:16px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Sistema<span style="color:var(--coral)">•</span>Citas</div>
+  <a href="#hablemos" class="nav-cta">Hablar ahora</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Cada mensaje sin responder es una cita perdida</div>
+  <h1 class="display">Tu negocio no cierra a las 7pm.<br><em>¿Por qué tu teléfono sí?</em></h1>
+  <p class="hero-sub">
+    Un sistema que responde, agenda y confirma citas solo — de día, de noche, fines de semana.
+    Sin que tú o tu equipo tengan que estar pendientes del móvil.
+  </p>
+  <div class="hero-ctas">
+    <a href="#hablemos" class="btn-primary">Hablemos de tu negocio →</a>
+    <a href="#prueba" class="btn-secondary">Ver cómo funciona</a>
+  </div>
+</section>
+
+<!-- CALCULADORA DE PÉRDIDA (psicología, sin precios) -->
+<section class="leak">
+  <div class="leak-card">
+    <div class="leak-title display">Esto es lo que probablemente estás perdiendo</div>
+    <div class="leak-sub">No hace falta que adivines. Solo con no responder a tiempo, esto es lo normal en un negocio con buena demanda:</div>
+
+    <div class="leak-row">
+      <div class="leak-label">Mensajes que llegan fuera de horario, cada semana</div>
+      <div class="leak-value">~10-15</div>
+    </div>
+    <div class="leak-row">
+      <div class="leak-label">De esos, los que se responden tarde o nunca</div>
+      <div class="leak-value">6 de cada 10</div>
+    </div>
+    <div class="leak-row">
+      <div class="leak-label">Clientes que ya no vuelven a escribir tras esperar</div>
+      <div class="leak-value">La mayoría</div>
+    </div>
+
+    <div class="leak-result">
+      <div class="amount">Cada cliente perdido esta semana es un cliente que ya no vuelve a intentar.</div>
+      <div class="caption">Un sistema que responde en segundos convierte esa fuga en citas confirmadas — sin contratar a nadie más.</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECUPERACIÓN EN EL TIEMPO -->
+<section class="recover">
+  <h2 class="section-title display">Lo recuperas antes de lo que crees</h2>
+  <p class="section-lead">No es una promesa vaga. Así se ve la primera semana con el sistema activo:</p>
+  <div class="timeline">
+    <div class="tl-item">
+      <span class="tl-day">Día 1-2</span>
+      <div><h4>Se monta el sistema</h4><p>Bot conectado a tu WhatsApp real, con tus horarios, servicios y forma de hablar.</p></div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-day">Día 3</span>
+      <div><h4>Empieza a responder solo</h4><p>Cada mensaje que antes se quedaba sin leer, ahora recibe respuesta en segundos.</p></div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-day">Semana 1</span>
+      <div><h4>Primeras citas recuperadas</h4><p>Los mensajes de fuera de horario — los que antes se perdían — empiezan a convertirse en agenda llena.</p></div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-day">Desde entonces</span>
+      <div><h4>El sistema ya se pagó solo</h4><p>Con muy pocas citas recuperadas al mes, la inversión queda cubierta — y todo lo demás es ganancia directa.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- WEB DE PRUEBA -->
+<section class="demo-section" id="prueba">
+  <div class="demo-card">
+    <div>
+      <div class="demo-badge">Demo interactiva</div>
+      <h3>Pruébalo tú mismo antes de decidir</h3>
+      <p>Te dejo una web de ejemplo con el bot funcionando de verdad. Escríbele como lo haría un cliente tuyo y mira cómo responde.</p>
+    </div>
+    <a href="landing-demo.html" class="btn-primary">Abrir demo del bot →</a>
+  </div>
+</section>
+
+<!-- HABLEMOS -->
+<section class="talk" id="hablemos">
+  <div class="talk-card">
+    <h2 class="display">Cada negocio es distinto</h2>
+    <p>Cuéntame en dos frases cómo funciona el tuyo ahora, y te digo exactamente cómo quedaría montado el sistema para ti.</p>
+    <div class="talk-ctas">
+      <a href="https://wa.me/34644565828?text=Hola%2C%20vi%20la%20demo%20del%20sistema%20de%20citas%20y%20quiero%20saber%20m%C3%A1s" class="btn-whatsapp" target="_blank">
+        WhatsApp directo
+      </a>
+      <a href="https://t.me/+34644565828" class="btn-telegram" target="_blank">
+        Telegram
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>Sistema de citas automático — hablemos y lo vemos juntos.</footer>
+
+</body>
+</html>
