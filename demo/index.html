@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clínica Dental Alba — Agenda tu cita</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#0F3D3E;
+    --teal-dark:#0A2B2C;
+    --ivory:#F7F3EA;
+    --gold:#C9A227;
+    --blush:#EADFD3;
+    --mint:#E1EBE6;
+    --charcoal:#232323;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--ivory);color:var(--charcoal);font-family:'Work Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+  .display{font-family:'Cormorant Garamond',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  nav{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 56px;position:sticky;top:0;z-index:100;
+    background:rgba(247,243,234,0.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(15,61,62,0.08);
+  }
+  .logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--teal);letter-spacing:0.02em;}
+  .logo em{font-style:italic;color:var(--gold);}
+  .nav-links{display:flex;gap:32px;align-items:center;}
+  .nav-links a{color:var(--teal);text-decoration:none;font-size:0.92rem;font-weight:500;}
+  .nav-cta{
+    background:var(--teal);color:var(--ivory);padding:11px 24px;border-radius:2px;
+    text-decoration:none;font-size:0.88rem;font-weight:600;letter-spacing:0.02em;transition:.2s;
+  }
+  .nav-cta:hover{background:var(--gold);color:var(--teal-dark);}
+
+  /* HERO */
+  .hero{
+    display:grid;grid-template-columns:1.05fr 0.95fr;gap:60px;
+    max-width:1280px;margin:0 auto;padding:90px 56px 100px;align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;font-size:0.76rem;
+    letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);
+    font-weight:600;margin-bottom:22px;
+  }
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--gold);}
+
+  h1{
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(2.6rem,4.8vw,4rem);line-height:1.08;color:var(--teal);
+    margin-bottom:24px;letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic;color:var(--gold);}
+  .hero-sub{font-size:1.08rem;color:#4a4a44;max-width:460px;margin-bottom:38px;}
+
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:50px;}
+  .btn-gold{
+    background:var(--gold);color:var(--teal-dark);padding:16px 32px;border-radius:2px;
+    text-decoration:none;font-weight:600;font-size:0.95rem;letter-spacing:0.02em;
+    display:inline-flex;align-items:center;gap:8px;transition:.2s;
+  }
+  .btn-gold:hover{background:var(--teal);color:var(--ivory);transform:translateY(-1px);}
+  .btn-outline{
+    background:transparent;color:var(--teal);padding:16px 28px;border-radius:2px;
+    border:1px solid rgba(15,61,62,0.3);text-decoration:none;font-weight:600;font-size:0.95rem;
+  }
+
+  .trust-row{display:flex;gap:44px;}
+  .trust-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--teal);}
+  .trust-label{font-size:0.78rem;color:#78766c;letter-spacing:0.02em;}
+
+  /* HERO GRAPHIC — sin fotos de stock, ilustración geométrica propia */
+  .hero-visual{display:flex;justify-content:center;align-items:center;position:relative;}
+  .smile-graphic{width:100%;max-width:420px;aspect-ratio:1;position:relative;}
+  .ring{
+    position:absolute;border-radius:50%;border:1px solid rgba(201,162,39,0.35);
+  }
+  .ring.r1{inset:0;}
+  .ring.r2{inset:14%;border-color:rgba(15,61,62,0.15);}
+  .ring.r3{inset:28%;background:var(--teal);border:none;
+    display:flex;align-items:center;justify-content:center;}
+  .tooth-icon{width:38%;height:38%;}
+  .rating-pill{
+    position:absolute;bottom:6%;left:2%;background:white;border-radius:100px;
+    padding:12px 20px;box-shadow:0 12px 30px rgba(15,61,62,0.12);
+    display:flex;align-items:center;gap:10px;font-size:0.85rem;font-weight:600;color:var(--teal);
+  }
+  .stars{color:var(--gold);letter-spacing:1px;}
+  .float-card{
+    position:absolute;top:8%;right:0%;background:white;border-radius:14px;
+    padding:14px 18px;box-shadow:0 12px 30px rgba(15,61,62,0.12);
+    font-size:0.8rem;color:var(--teal);font-weight:500;max-width:170px;
+  }
+
+  /* SERVICIOS */
+  .section{padding:100px 56px;max-width:1180px;margin:0 auto;}
+  .section-title{
+    font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.4vw,2.8rem);
+    color:var(--teal);margin-bottom:14px;font-weight:500;
+  }
+  .section-lead{color:#5a584f;max-width:520px;margin-bottom:56px;font-size:1rem;}
+
+  .services{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(15,61,62,0.1);}
+  .service-card{background:var(--ivory);padding:44px 34px;transition:.25s;}
+  .service-card:hover{background:var(--teal);color:var(--ivory);}
+  .service-card:hover h3, .service-card:hover .service-num{color:var(--gold);}
+  .service-num{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:0.82rem;display:block;margin-bottom:16px;}
+  .service-card h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:10px;font-weight:600;color:var(--teal);transition:.25s;}
+  .service-card p{font-size:0.9rem;opacity:0.85;}
+
+  /* BOOKING SECTION — el elemento firma */
+  .booking{background:var(--teal);color:var(--ivory);padding:100px 56px;}
+  .booking-inner{max-width:1180px;margin:0 auto;}
+  .booking-head{max-width:600px;margin-bottom:56px;}
+  .booking-head .eyebrow{color:var(--gold);}
+  .booking-head h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.4vw,2.8rem);font-weight:500;margin-bottom:14px;}
+  .booking-head p{color:rgba(247,243,234,0.75);}
+
+  .booking-grid{display:grid;grid-template-columns:0.85fr 1.15fr;gap:40px;align-items:start;}
+
+  .whatsapp-panel{
+    background:rgba(247,243,234,0.06);border:1px solid rgba(247,243,234,0.15);
+    border-radius:16px;padding:36px;
+  }
+  .whatsapp-panel h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:12px;font-weight:600;}
+  .whatsapp-panel p{color:rgba(247,243,234,0.7);font-size:0.92rem;margin-bottom:24px;}
+  .btn-whatsapp{
+    background:#25D366;color:#0b3d1f;padding:15px 26px;border-radius:100px;
+    text-decoration:none;font-weight:600;font-size:0.95rem;display:inline-flex;
+    align-items:center;gap:10px;transition:.2s;
+  }
+  .btn-whatsapp:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(37,211,102,0.3);}
+  .or-divider{
+    display:flex;align-items:center;gap:12px;margin:28px 0;color:rgba(247,243,234,0.4);
+    font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  }
+  .or-divider::before, .or-divider::after{content:"";flex:1;height:1px;background:rgba(247,243,234,0.15);}
+
+  /* WIDGET DE RESERVA EMBEBIDO */
+  .booking-widget{
+    background:var(--ivory);color:var(--charcoal);border-radius:16px;
+    overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  }
+  .widget-header{
+    background:white;padding:20px 26px;border-bottom:1px solid rgba(15,61,62,0.08);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .widget-header h4{font-family:'Cormorant Garamond',serif;color:var(--teal);font-size:1.2rem;font-weight:600;}
+  .gcal-badge{
+    display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#5a584f;
+    background:var(--mint);padding:5px 10px;border-radius:100px;
+  }
+  .widget-body{padding:26px;min-height:340px;display:flex;flex-direction:column;gap:14px;}
+
+  .step-label{font-size:0.8rem;color:#8a8778;font-weight:500;margin-bottom:2px;}
+  .day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .day-btn{
+    background:white;border:1.5px solid rgba(15,61,62,0.12);border-radius:10px;
+    padding:14px 8px;text-align:center;cursor:pointer;transition:.15s;font-family:'Work Sans';
+  }
+  .day-btn:hover{border-color:var(--gold);}
+  .day-btn .dname{font-size:0.7rem;color:#8a8778;display:block;}
+  .day-btn .dnum{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--teal);font-weight:600;}
+
+  .slot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .slot-btn{
+    background:white;border:1.5px solid rgba(15,61,62,0.12);border-radius:10px;
+    padding:12px 6px;text-align:center;cursor:pointer;font-size:0.85rem;color:var(--teal);
+    font-weight:500;transition:.15s;font-family:'Work Sans';
+  }
+  .slot-btn:hover{border-color:var(--gold);background:var(--blush);}
+
+  .confirm-box{
+    background:white;border-radius:12px;padding:20px;border:1.5px solid rgba(15,61,62,0.1);
+  }
+  .confirm-row{display:flex;justify-content:space-between;font-size:0.88rem;padding:6px 0;color:#4a4a44;}
+  .confirm-row b{color:var(--teal);}
+  .confirm-btn{
+    width:100%;margin-top:14px;background:var(--teal);color:var(--ivory);border:none;
+    padding:14px;border-radius:10px;font-weight:600;font-size:0.95rem;cursor:pointer;
+    font-family:'Work Sans';transition:.2s;
+  }
+  .confirm-btn:hover{background:var(--gold);color:var(--teal-dark);}
+
+  .success-box{text-align:center;padding:20px 10px;}
+  .success-icon{
+    width:56px;height:56px;border-radius:50%;background:var(--mint);color:var(--teal);
+    display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 16px;
+  }
+  .success-box h4{font-family:'Cormorant Garamond',serif;color:var(--teal);font-size:1.3rem;margin-bottom:8px;}
+  .success-box p{font-size:0.88rem;color:#5a584f;}
+  .cal-sync-tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;color:#5a584f;
+    background:var(--mint);padding:6px 12px;border-radius:100px;margin-top:14px;
+  }
+
+  .widget-input-row{display:flex;flex-direction:column;gap:10px;}
+  .widget-input-row input{
+    border:1.5px solid rgba(15,61,62,0.15);border-radius:10px;padding:12px 14px;
+    font-family:'Work Sans';font-size:0.9rem;transition:.15s;
+  }
+  .widget-input-row input.input-invalid{
+    border-color:#C1443A;background:#FBEEED;
+  }
+  .field-error{
+    font-size:0.8rem;color:#C1443A;min-height:16px;margin-top:-2px;
+  }
+
+  /* BADGE FIJO — web de prueba */
+  .test-badge{
+    position:fixed;bottom:20px;right:20px;z-index:999;
+    background:var(--teal-dark);color:var(--ivory);
+    padding:12px 18px;border-radius:100px;
+    font-size:0.8rem;font-weight:600;letter-spacing:0.01em;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    display:flex;align-items:center;gap:8px;
+    border:1px solid rgba(201,162,39,0.4);
+  }
+  .test-badge::before{content:"●";color:var(--gold);animation:pulse 2s infinite;}
+  @media (max-width:600px){
+    .test-badge{
+      bottom:12px;right:12px;left:12px;justify-content:center;
+      font-size:0.74rem;padding:10px 14px;
+    }
+  }
+
+  footer{text-align:center;padding:44px 24px;color:#8a8778;font-size:0.85rem;background:var(--ivory);}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding:60px 24px;}
+    .services{grid-template-columns:1fr;}
+    .booking-grid{grid-template-columns:1fr;}
+    nav{padding:18px 22px;}
+    .nav-links{display:none;}
+    .section, .booking{padding:60px 24px;}
+    .hero-visual{order:-1;}
+  }
+</style>
+</head>
+<body>
+
+<div class="test-badge">Web de prueba — no conectada a ninguna clínica real</div>
+
+<nav>
+  <div class="logo">Clínica Dental <em>Alba</em></div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#reservar">Reservar</a>
+  </div>
+  <a href="#reservar" class="nav-cta">Agendar cita</a>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">Odontología de confianza · Madrid</div>
+    <h1 class="display">Una sonrisa que se cuida <em>con calma</em>, no con prisa</h1>
+    <p class="hero-sub">Revisiones, estética y ortodoncia con un equipo que se toma el tiempo de explicarte cada paso. Sin salas de espera eternas.</p>
+    <div class="hero-ctas">
+      <a href="#reservar" class="btn-gold">Agendar cita →</a>
+      <a href="#servicios" class="btn-outline">Ver tratamientos</a>
+    </div>
+    <div class="trust-row">
+      <div><div class="trust-num">12</div><div class="trust-label">años de experiencia</div></div>
+      <div><div class="trust-num">4.9</div><div class="trust-label">valoración media</div></div>
+      <div><div class="trust-num">3.200+</div><div class="trust-label">pacientes atendidos</div></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="smile-graphic">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3">
+        <svg class="tooth-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C8.5 2 6 4 6 7.5C6 9.5 6.5 10.5 6.8 12.5C7.1 14.5 7 17 8 20C8.3 21 9 22 10 22C11 22 11 19 11 17.5C11 16.5 11.5 16 12 16C12.5 16 13 16.5 13 17.5C13 19 13 22 14 22C15 22 15.7 21 16 20C17 17 16.9 14.5 17.2 12.5C17.5 10.5 18 9.5 18 7.5C18 4 15.5 2 12 2Z" stroke="#C9A227" stroke-width="1.2" fill="none"/>
+        </svg>
+      </div>
+      <div class="float-card">"El equipo más atento con el que he estado" — paciente</div>
+      <div class="rating-pill"><span class="stars">★★★★★</span> 4.9/5</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="servicios">
+  <h2 class="section-title">Tratamientos</h2>
+  <p class="section-lead">Los tres motivos por los que más nos escriben — cada cita se ajusta a lo que necesites.</p>
+  <div class="services">
+    <div class="service-card">
+      <span class="service-num">01</span>
+      <h3>Revisión general</h3>
+      <p>Diagnóstico completo, limpieza y plan personalizado si hace falta algo más.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-num">02</span>
+      <h3>Blanqueamiento</h3>
+      <p>Resultado visible desde la primera sesión, con seguimiento incluido.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-num">03</span>
+      <h3>Ortodoncia invisible</h3>
+      <p>Alineadores a medida, revisiones cortas y avance visible cada mes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="reservar">
+  <div class="booking-inner">
+    <div class="booking-head">
+      <div class="eyebrow">Reserva en menos de un minuto</div>
+      <h2 class="display">Elige cómo prefieres agendar</h2>
+      <p>Por WhatsApp, hablando como siempre. O aquí mismo, si prefieres verlo todo en pantalla.</p>
+    </div>
+
+    <div class="booking-grid">
+      <div class="whatsapp-panel">
+        <h3 class="display">Por WhatsApp</h3>
+        <p>Escríbenos directo, te respondemos al momento y quedamos en el horario que mejor te venga.</p>
+        <a href="https://wa.me/34644565828?text=Hola%2C%20quiero%20agendar%20una%20cita%20en%20Cl%C3%ADnica%20Dental%20Alba" class="btn-whatsapp" target="_blank">
+          Agendar por WhatsApp
+        </a>
+        <div class="or-divider">o resérvalo tú mismo aquí →</div>
+        <p style="font-size:0.82rem;color:rgba(247,243,234,0.55)">El asistente de la derecha guarda la cita directo en el calendario de la clínica — sin llamadas, sin esperar respuesta.</p>
+      </div>
+
+      <div class="booking-widget">
+        <div class="widget-header">
+          <h4>Reservar cita</h4>
+          <div class="gcal-badge">📅 Sincronizado con Google Calendar</div>
+        </div>
+        <div class="widget-body" id="widgetBody"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>Clínica Dental Alba — ejemplo de landing premium, plantilla adaptable a cualquier negocio.</footer>
+
+<script>
+/* ============================================
+   MOTOR DEL WIDGET DE RESERVA (simulado en frontend)
+   La escritura REAL en Google Calendar requiere backend
+   (ver nota de integración al final de este bloque)
+   ============================================ */
+const widgetBody = document.getElementById('widgetBody');
+let booking = { day:null, time:null, name:null };
+
+function renderDayStep(){
+  const today = new Date();
+  const days = [];
+  for(let i=1;i<=8;i++){
+    const d = new Date(today);
+    d.setDate(today.getDate()+i);
+    if(d.getDay()===0) continue; // sin domingos
+    days.push(d);
+    if(days.length===4) break;
+  }
+  const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  widgetBody.innerHTML = `
+    <div class="step-label">Paso 1 de 3 · Elige un día</div>
+    <div class="day-grid">
+      ${days.map(d=>`
+        <div class="day-btn" data-day="${d.toISOString()}">
+          <span class="dname">${dayNames[d.getDay()]}</span>
+          <span class="dnum">${d.getDate()}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  widgetBody.querySelectorAll('.day-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      booking.day = new Date(btn.dataset.day);
+      renderTimeStep();
+    };
+  });
+}
+
+function renderTimeStep(){
+  const dayNames = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const label = `${dayNames[booking.day.getDay()]} ${booking.day.getDate()}`;
+  const slots = ['9:30','11:00','12:30','16:00','17:30','19:00'];
+  widgetBody.innerHTML = `
+    <div class="step-label">Paso 2 de 3 · Horario disponible para ${label}</div>
+    <div class="slot-grid">
+      ${slots.map(s=>`<div class="slot-btn" data-slot="${s}">${s}</div>`).join('')}
+    </div>
+  `;
+  widgetBody.querySelectorAll('.slot-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      booking.time = btn.dataset.slot;
+      renderConfirmStep();
+    };
+  });
+}
+
+function renderConfirmStep(){
+  const dayNames = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const label = `${dayNames[booking.day.getDay()]} ${booking.day.getDate()}`;
+  widgetBody.innerHTML = `
+    <div class="step-label">Paso 3 de 3 · Confirma tus datos</div>
+    <div class="widget-input-row">
+      <input type="text" id="inpName" placeholder="Tu nombre *">
+      <input type="tel" id="inpPhone" placeholder="Tu teléfono *">
+      <div class="field-error" id="fieldError"></div>
+    </div>
+    <div class="confirm-box">
+      <div class="confirm-row"><span>Día</span><b>${label}</b></div>
+      <div class="confirm-row"><span>Hora</span><b>${booking.time}</b></div>
+      <div class="confirm-row"><span>Servicio</span><b>Revisión general</b></div>
+      <button class="confirm-btn" id="btnConfirm">Confirmar cita</button>
+    </div>
+  `;
+  const inpName = document.getElementById('inpName');
+  const inpPhone = document.getElementById('inpPhone');
+  const fieldError = document.getElementById('fieldError');
+  const btnConfirm = document.getElementById('btnConfirm');
+
+  function clearFieldErrors(){
+    inpName.classList.remove('input-invalid');
+    inpPhone.classList.remove('input-invalid');
+    fieldError.textContent = '';
+  }
+  inpName.addEventListener('input', clearFieldErrors);
+  inpPhone.addEventListener('input', clearFieldErrors);
+
+  btnConfirm.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const name = (inpName.value || '').trim();
+    const phone = (inpPhone.value || '').trim();
+    const phoneDigits = phone.replace(/\D/g,'');
+    clearFieldErrors();
+
+    if(name.length === 0 || phone.length === 0){
+      fieldError.textContent = 'Necesitamos tu nombre y teléfono para confirmar la cita.';
+      if(name.length === 0) inpName.classList.add('input-invalid');
+      if(phone.length === 0) inpPhone.classList.add('input-invalid');
+      return false;
+    }
+    if(phoneDigits.length < 9){
+      fieldError.textContent = 'Revisa el teléfono, parece incompleto.';
+      inpPhone.classList.add('input-invalid');
+      return false;
+    }
+    renderSuccessStep(name);
+  });
+}
+
+function renderSuccessStep(name){
+  const dayNames = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const label = `${dayNames[booking.day.getDay()]} ${booking.day.getDate()}`;
+  widgetBody.innerHTML = `
+    <div class="success-box">
+      <div class="success-icon">✓</div>
+      <h4>¡Cita confirmada, ${name}!</h4>
+      <p>Te esperamos el ${label} a las ${booking.time}. Te llegará un recordatorio antes de la cita.</p>
+    
